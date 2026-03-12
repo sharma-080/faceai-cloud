@@ -5,6 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>FaceAI Live</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
         :root {
             --bg: #09090f;
@@ -34,7 +36,6 @@
             min-height: 100vh;
         }
 
-        /* ── Header ── */
         header {
             display: flex;
             align-items: center;
@@ -79,10 +80,9 @@
             background: var(--warn);
         }
 
-        /* ── Layout ── */
         .layout {
             display: grid;
-            grid-template-columns: 1fr 340px;
+            grid-template-columns: 1fr 360px;
             gap: 20px;
             padding: 20px 24px;
             max-width: 1400px;
@@ -95,7 +95,7 @@
             }
         }
 
-        /* ── Feed ── */
+        /* Feed */
         .feed-card {
             background: var(--card);
             border: 1px solid var(--border);
@@ -130,7 +130,7 @@
             color: var(--sub);
         }
 
-        /* ── Sidebar ── */
+        /* Sidebar */
         .sidebar {
             display: flex;
             flex-direction: column;
@@ -154,73 +154,7 @@
             border-bottom: 1px solid var(--border);
         }
 
-        /* ── Events ── */
-        .event-list {
-            max-height: 420px;
-            overflow-y: auto;
-        }
-
-        .event-list::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .event-list::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 2px;
-        }
-
-        .event-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 16px;
-            border-bottom: 1px solid var(--border);
-            transition: background .15s;
-        }
-
-        .event-row:hover {
-            background: rgba(255, 255, 255, .03);
-        }
-
-        .event-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .event-name {
-            font-weight: 600;
-            font-size: 13px;
-            flex: 1;
-        }
-
-        .badge {
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-        }
-
-        .badge.entry {
-            background: rgba(0, 255, 136, .15);
-            color: var(--ok);
-        }
-
-        .badge.unknown {
-            background: rgba(255, 59, 92, .15);
-            color: var(--warn);
-        }
-
-        .event-time {
-            font-size: 11px;
-            color: var(--sub);
-            margin-top: 2px;
-        }
-
-        /* ── Stats ── */
+        /* Stats */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -247,6 +181,89 @@
             text-transform: uppercase;
         }
 
+        /* Unknown gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 12px;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            border-radius: 6px;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            border: 2px solid var(--warn);
+        }
+
+        .gallery-item .ts {
+            font-size: 10px;
+            color: var(--sub);
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        /* Events */
+        .event-list {
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .event-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .event-list::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .event-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .event-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .event-name {
+            font-weight: 600;
+            font-size: 13px;
+            flex: 1;
+        }
+
+        .badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .badge.entry {
+            background: rgba(0, 255, 136, .15);
+            color: var(--ok);
+        }
+
+        .badge.unknown {
+            background: rgba(255, 59, 92, .15);
+            color: var(--warn);
+        }
+
+        .event-time {
+            font-size: 11px;
+            color: var(--sub);
+            margin-top: 2px;
+        }
+
         .empty {
             padding: 24px;
             text-align: center;
@@ -254,8 +271,6 @@
             font-size: 13px;
         }
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 
 <body>
@@ -277,7 +292,7 @@
                     <span>Live Camera</span>
                     <span id="age-badge" style="color:var(--accent);font-size:12px"></span>
                 </div>
-                <img id="feed-img" alt="Live feed loading…" />
+                <img id="feed-img" alt="Waiting for feed…" />
                 <div class="feed-footer" id="feed-footer">Waiting for first frame…</div>
             </div>
         </div>
@@ -291,12 +306,20 @@
                 <div class="stats-grid">
                     <div class="stat">
                         <div class="stat-val" id="stat-entries">—</div>
-                        <div class="stat-lbl">Known entries</div>
+                        <div class="stat-lbl">Known Entries</div>
                     </div>
                     <div class="stat">
                         <div class="stat-val" id="stat-unknowns">—</div>
                         <div class="stat-lbl">Unknowns</div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Unknown faces gallery -->
+            <div class="card">
+                <div class="card-title">⚠ Recent Unknown Faces</div>
+                <div class="gallery-grid" id="unknown-gallery">
+                    <div class="empty" style="grid-column:1/-1">No unknowns captured yet</div>
                 </div>
             </div>
 
@@ -318,14 +341,13 @@
         const feedFooter = document.getElementById('feed-footer');
         const ageBadge = document.getElementById('age-badge');
         const eventList = document.getElementById('event-list');
+        const unknownGallery = document.getElementById('unknown-gallery');
         const statEntries = document.getElementById('stat-entries');
         const statUnknowns = document.getElementById('stat-unknowns');
 
-        // ── Fetch live frame every 800ms ──
         async function refreshFrame() {
             try {
-                const res = await fetch('/api/latest-frame');
-                const data = await res.json();
+                const data = await fetch('/api/latest-frame').then(r => r.json());
                 if (data.frame) {
                     feedImg.src = 'data:image/jpeg;base64,' + data.frame;
                     const age = data.age;
@@ -336,27 +358,23 @@
             } catch (e) { }
         }
 
-        // ── Fetch status every 3s ──
         async function refreshStatus() {
             try {
                 const data = await fetch('/api/status').then(r => r.json());
-                const online = data.online;
-                dot.className = 'dot ' + (online ? 'online' : 'offline');
-                statusText.textContent = online ? 'Camera Online' : 'Camera Offline';
+                dot.className = 'dot ' + (data.online ? 'online' : 'offline');
+                statusText.textContent = data.online ? 'Camera Online' : 'Camera Offline';
             } catch (e) {
                 dot.className = 'dot offline';
                 statusText.textContent = 'Disconnected';
             }
         }
 
-        // ── Fetch events every 3s ──
         async function refreshEvents() {
             try {
                 const events = await fetch('/api/events?limit=50').then(r => r.json());
-
                 if (!events.length) return;
 
-                // Stats — count today's entries
+                // Stats
                 const today = new Date().toDateString();
                 let entries = 0, unknowns = 0;
                 events.forEach(e => {
@@ -369,27 +387,39 @@
                 statEntries.textContent = entries;
                 statUnknowns.textContent = unknowns;
 
-                // Event list
+                // Unknown gallery — only events with image_url
+                const unknownImgs = events.filter(e => e.event === 'UNKNOWN' && e.image_url);
+                if (unknownImgs.length) {
+                    unknownGallery.innerHTML = unknownImgs.slice(0, 9).map(e => {
+                        const t = new Date(e.time.slice(0, 23));
+                        const ts = isNaN(t) ? '' : t.toLocaleTimeString();
+                        return `<div class="gallery-item">
+          <img src="${e.image_url}" loading="lazy" onerror="this.style.display='none'"/>
+          <div class="ts">${ts}</div>
+        </div>`;
+                    }).join('');
+                }
+
+                // Event log
                 eventList.innerHTML = events.slice(0, 30).map(e => {
                     const isUnknown = e.name === 'Unknown';
                     const color = isUnknown ? 'var(--warn)' : 'var(--ok)';
                     const badge = isUnknown ? 'unknown' : 'entry';
                     const timeStr = new Date(e.time.slice(0, 23)).toLocaleTimeString();
                     const conf = e.confidence ? ` · ${Math.round(e.confidence)}%` : '';
-                    return `
-        <div class="event-row">
-          <div class="event-dot" style="background:${color}"></div>
-          <div class="event-name">${e.name}</div>
-          <div>
-            <div class="badge ${badge}">${e.event}${conf}</div>
-            <div class="event-time">${timeStr}</div>
-          </div>
-        </div>`;
+                    return `<div class="event-row">
+        <div class="event-dot" style="background:${color}"></div>
+        <div class="event-name">${e.name}</div>
+        <div>
+          <div class="badge ${badge}">${e.event}${conf}</div>
+          <div class="event-time">${timeStr}</div>
+        </div>
+      </div>`;
                 }).join('');
+
             } catch (e) { }
         }
 
-        // ── Start polling ──
         refreshFrame();
         refreshStatus();
         refreshEvents();
